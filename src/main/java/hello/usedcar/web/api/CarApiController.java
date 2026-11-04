@@ -5,6 +5,7 @@ import hello.usedcar.dto.CarSaveRequest;
 import hello.usedcar.dto.CarSearchCond;
 import hello.usedcar.dto.CarUpdateRequest;
 import hello.usedcar.service.CarService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class CarApiController {
 
     // POST /api/cars  (JSON 본문)
     @PostMapping
-    public ResponseEntity<Car> register(@RequestBody CarSaveRequest request) {
+    public ResponseEntity<Car> register(@Valid @RequestBody CarSaveRequest request) {
         Car saved = carService.register(request);
         URI location = URI.create("/api/cars/" + saved.getId());
         return ResponseEntity.created(location).body(saved); // 201 + Location
@@ -49,7 +50,8 @@ public class CarApiController {
     // PATCH /api/cars/1  (JSON 본문)
     @PatchMapping("/{carId}")
     public ResponseEntity<Car> update(@PathVariable Long carId,
-                                      @RequestBody CarUpdateRequest request) {
+                                      @Valid @RequestBody CarUpdateRequest request) {
         return ResponseEntity.of(carService.update(carId, request));
     }
 }
+

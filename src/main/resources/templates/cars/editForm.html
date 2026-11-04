@@ -11,15 +11,16 @@
 <form th:action="@{/cars/{carId}/edit(carId=${carInfo.id})}" th:object="${car}" method="post">
     <div class="field">
         <label for="mileage">주행거리(km)</label>
-        <input type="number" th:field="*{mileage}">
+        <input type="text" th:field="*{mileage}" th:errorclass="field-error">
+        <div class="error" th:errors="*{mileage}">주행거리 오류</div>
     </div>
     <div class="field">
         <label for="price">가격(만원)</label>
-        <input type="number" th:field="*{price}">
+        <input type="text" th:field="*{price}" th:errorclass="field-error">
+        <div class="error" th:errors="*{price}">가격 오류</div>
     </div>
     <button type="submit">저장</button>
     <a th:href="@{/cars/{carId}(carId=${carInfo.id})}">취소</a>
 </form>
 </body>
-</html>
 </html>

@@ -11,31 +11,36 @@
 <form th:action="@{/cars/add}" th:object="${car}" method="post">
     <div class="field">
         <label for="carNumber">차량번호</label>
-        <input type="text" th:field="*{carNumber}" placeholder="예: 12가3456">
+        <input type="text" th:field="*{carNumber}" th:errorclass="field-error" placeholder="예: 12가3456">
+        <div class="error" th:errors="*{carNumber}">차량번호 오류</div>
     </div>
     <div class="field">
         <label for="manufacturer">제조사</label>
-        <input type="text" th:field="*{manufacturer}">
+        <input type="text" th:field="*{manufacturer}" th:errorclass="field-error">
+        <div class="error" th:errors="*{manufacturer}">제조사 오류</div>
     </div>
     <div class="field">
         <label for="modelName">모델명</label>
-        <input type="text" th:field="*{modelName}">
+        <input type="text" th:field="*{modelName}" th:errorclass="field-error">
+        <div class="error" th:errors="*{modelName}">모델명 오류</div>
     </div>
     <div class="field">
         <label for="modelYear">연식</label>
-        <input type="number" th:field="*{modelYear}">
+        <input type="text" th:field="*{modelYear}" th:errorclass="field-error">
+        <div class="error" th:errors="*{modelYear}">연식 오류</div>
     </div>
     <div class="field">
         <label for="mileage">주행거리(km)</label>
-        <input type="number" th:field="*{mileage}">
+        <input type="text" th:field="*{mileage}" th:errorclass="field-error">
+        <div class="error" th:errors="*{mileage}">주행거리 오류</div>
     </div>
     <div class="field">
         <label for="price">가격(만원)</label>
-        <input type="number" th:field="*{price}">
+        <input type="text" th:field="*{price}" th:errorclass="field-error">
+        <div class="error" th:errors="*{price}">가격 오류</div>
     </div>
     <button type="submit">등록</button>
     <a th:href="@{/cars}">취소</a>
 </form>
 </body>
-</html>
 </html>

@@ -34,4 +34,8 @@ public class CarService {
     public List<Car> findCars(CarSearchCond cond) {
         return carRepository.findAll(cond);
     }
+
+    public boolean isDuplicateCarNumber(String carNumber) {
+        return carRepository.findByCarNumber(carNumber).isPresent();
+    }
 }

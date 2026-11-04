@@ -9,6 +9,8 @@ import hello.usedcar.service.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,8 +54,19 @@ public class CarController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("car") CarSaveRequest request,
+    public String add(@Validated @ModelAttribute("car") CarSaveRequest request,
+                      BindingResult bindingResult,
                       RedirectAttributes redirectAttributes) {
+
+        // 애노테이션으로 표현하기 어려운 검증은 직접 한다
+        if (request.getCarNumber() != null && carService.isDuplicateCarNumber(request.getCarNumber())) {
+            bindingResult.rejectValue("carNumber", "duplicate");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "cars/addForm"; // 입력값과 오류를 그대로 들고 폼으로 돌아간다
+        }
+
         Car saved = carService.register(request);
         redirectAttributes.addAttribute("carId", saved.getId());
         redirectAttributes.addAttribute("status", true);
@@ -70,7 +83,15 @@ public class CarController {
 
     @PostMapping("/{carId}/edit")
     public String edit(@PathVariable Long carId,
-                       @ModelAttribute("car") CarUpdateRequest request) {
+                       @Validated @ModelAttribute("car") CarUpdateRequest request, // @Validated를 붙이면 바인딩이 끝난 뒤 애노테이션 규칙을 검사
+                       BindingResult bindingResult, // BindingResult는 검증 대상 바로 뒤에
+                       Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("carInfo", carService.findById(carId).orElseThrow());
+            return "cars/editForm";
+        }
+
         carService.update(carId, request);
         return "redirect:/cars/{carId}";
     }
