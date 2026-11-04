@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>중고차 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>중고차 목록</h1>
+
+<form th:action="@{/cars}" th:object="${cond}" method="get" class="search">
+    <input type="text" th:field="*{modelName}" placeholder="모델명">
+    <input type="number" th:field="*{maxPrice}" placeholder="최대 가격(만원)">
+    <select th:field="*{status}">
+        <option value="">전체</option>
+        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.description}">판매중</option>
+    </select>
+    <button type="submit">검색</button>
+</form>
+
+<p><a th:href="@{/cars/add}">차량 등록</a></p>
+
+<table>
+    <thead>
+    <tr><th>차량번호</th><th>모델</th><th>연식</th><th>주행거리</th><th>가격</th><th>상태</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="car : ${cars}">
+        <td><a th:href="@{/cars/{carId}(carId=${car.id})}" th:text="${car.carNumber}">12가3456</a></td>
+        <td th:text="|${car.manufacturer} ${car.modelName}|">현대 쏘나타</td>
+        <td th:text="${car.modelYear}">2021</td>
+        <td th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')} + 'km'">42,000km</td>
+        <td th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + '만원'">2,150만원</td>
+        <td th:text="${car.status.description}">판매중</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(cars)}">
+        <td colspan="6">조건에 맞는 차량이 없습니다.</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
+</html>

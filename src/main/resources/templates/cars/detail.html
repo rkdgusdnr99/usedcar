@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>차량 상세</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1 th:text="|${car.manufacturer} ${car.modelName}|">현대 쏘나타</h1>
+
+<p class="notice" th:if="${param.status}">저장되었습니다.</p>
+
+<table>
+    <tr><th>차량번호</th><td th:text="${car.carNumber}">12가3456</td></tr>
+    <tr><th>연식</th><td th:text="${car.modelYear}">2021</td></tr>
+    <tr><th>주행거리</th><td th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')} + 'km'">42,000km</td></tr>
+    <tr><th>가격</th><td th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + '만원'">2,150만원</td></tr>
+    <tr><th>상태</th><td th:text="${car.status.description}">판매중</td></tr>
+</table>
+
+<p>
+    <a th:href="@{/cars/{carId}/edit(carId=${car.id})}">수정</a> |
+    <a th:href="@{/cars}">목록</a>
+</p>
+</body>
+</html>
+</html>

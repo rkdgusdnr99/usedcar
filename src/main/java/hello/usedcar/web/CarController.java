@@ -1,0 +1,77 @@
+package hello.usedcar.web;
+
+import hello.usedcar.domain.Car;
+import hello.usedcar.domain.CarStatus;
+import hello.usedcar.dto.CarSaveRequest;
+import hello.usedcar.dto.CarSearchCond;
+import hello.usedcar.dto.CarUpdateRequest;
+import hello.usedcar.service.CarService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/cars")
+@RequiredArgsConstructor
+public class CarController {
+
+    private final CarService carService;
+
+    // 이 컨트롤러의 모든 화면에서 ${statuses}로 쓸 수 있다. 기준정보 같은 느낌으로 생각하면 좋을듯..? CMFWMT 같은 느낌??
+    @ModelAttribute("statuses")
+    public CarStatus[] statuses() {
+        return CarStatus.values();
+    }
+
+    @GetMapping
+    public String list(@ModelAttribute("cond") CarSearchCond cond, Model model) {
+        List<Car> cars = carService.findCars(cond);
+        model.addAttribute("cars", cars);
+        return "cars/list";
+    }
+
+    @GetMapping("/{carId}")
+    public String detail(@PathVariable Long carId, Model model) {
+        Car car = carService.findById(carId).orElseThrow(); // 없는 차량 처리는 5강에서
+        model.addAttribute("car", car);
+        return "cars/detail";
+    }
+
+    @GetMapping("/add")
+    public String addForm(Model model) {
+        model.addAttribute("car", new CarSaveRequest());
+        return "cars/addForm";
+    }
+
+    @PostMapping("/add")
+    public String add(@ModelAttribute("car") CarSaveRequest request,
+                      RedirectAttributes redirectAttributes) {
+        Car saved = carService.register(request);
+        redirectAttributes.addAttribute("carId", saved.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/cars/{carId}"; // PRG: 등록 후 상세 화면으로 리다이렉트
+    }
+
+    @GetMapping("/{carId}/edit")
+    public String editForm(@PathVariable Long carId, Model model) {
+        Car car = carService.findById(carId).orElseThrow();
+        model.addAttribute("carInfo", car);
+        model.addAttribute("car", new CarUpdateRequest(car.getMileage(), car.getPrice()));
+        return "cars/editForm";
+    }
+
+    @PostMapping("/{carId}/edit")
+    public String edit(@PathVariable Long carId,
+                       @ModelAttribute("car") CarUpdateRequest request) {
+        carService.update(carId, request);
+        return "redirect:/cars/{carId}";
+    }
+}
