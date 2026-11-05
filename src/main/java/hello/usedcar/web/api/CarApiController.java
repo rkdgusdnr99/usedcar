@@ -1,6 +1,7 @@
 package hello.usedcar.web.api;
 
 import hello.usedcar.domain.Car;
+import hello.usedcar.domain.Maintenance;
 import hello.usedcar.dto.CarSaveRequest;
 import hello.usedcar.dto.CarSearchCond;
 import hello.usedcar.dto.CarUpdateRequest;
@@ -53,5 +54,10 @@ public class CarApiController {
                       @Valid @RequestBody CarUpdateRequest request) {
         return carService.update(carId, request);
     }
-}
 
+    // GET /api/cars/1/maintenances
+    @GetMapping("/{carId}/maintenances")
+    public List<Maintenance> maintenances(@PathVariable Long carId) {
+        return carService.findMaintenances(carId);
+    }
+}

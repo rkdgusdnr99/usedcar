@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.usedcar.repository.mybatis.CarMapper">
+
+    <!-- useGeneratedKeys: DB가 만든 id를 car 객체의 id 필드에 채워준다 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into car (car_number, manufacturer, model_name, model_year, mileage, price, status)
+        values (#{carNumber}, #{manufacturer}, #{modelName}, #{modelYear}, #{mileage}, #{price}, #{status})
+    </insert>
+
+    <update id="update">
+        update car
+        set mileage = #{updateParam.mileage},
+        price   = #{updateParam.price}
+        where id = #{id}
+    </update>
+
+    <select id="findById" resultType="Car">
+        select id, car_number, manufacturer, model_name, model_year, mileage, price, status
+        from car
+        where id = #{id}
+    </select>
+
+    <select id="findByCarNumber" resultType="Car">
+        select id, car_number, manufacturer, model_name, model_year, mileage, price, status
+        from car
+        where car_number = #{carNumber}
+    </select>
+
+    <!-- 동적 SQL: 값이 있는 조건만 붙는다. <where>는 첫 and를 알아서 지워준다 -->
+    <select id="findAll" resultType="Car">
+        select id, car_number, manufacturer, model_name, model_year, mileage, price, status
+        from car
+        <where>
+            <if test="modelName != null and modelName != ''">
+                and model_name like concat('%', #{modelName}, '%')
+            </if>
+            <if test="maxPrice != null">
+                and price &lt;= #{maxPrice}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <!-- 판매중 차량 기준 모델별 시세. 집계 함수만 쓰면 결과가 없어도 1행이 나온다 (count=0) -->
+    <select id="findMarketPrice" resultType="MarketPrice">
+        select #{modelName}       as model_name,
+        count(*)           as car_count,
+        round(avg(price))  as avg_price,
+        min(price)         as min_price,
+        max(price)         as max_price
+        from car
+        where model_name = #{modelName}
+        and status = 'SALE'
+    </select>
+
+</mapper>

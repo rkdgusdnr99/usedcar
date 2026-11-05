@@ -18,10 +18,31 @@
     <tr><th>상태</th><td th:text="${car.status.description}">판매중</td></tr>
 </table>
 
+<h2>시세</h2>
+<p th:if="${marketPrice.carCount > 0}"
+   th:text="|판매중인 ${marketPrice.modelName} ${marketPrice.carCount}대 평균 ${#numbers.formatInteger(marketPrice.avgPrice, 0, 'COMMA')}만원 (최저 ${#numbers.formatInteger(marketPrice.minPrice, 0, 'COMMA')} ~ 최고 ${#numbers.formatInteger(marketPrice.maxPrice, 0, 'COMMA')})|">
+    판매중인 쏘나타 3대 평균 2,110만원 (최저 1,590 ~ 최고 2,590)
+</p>
+<p th:unless="${marketPrice.carCount > 0}">판매중인 같은 모델이 없습니다.</p>
+
+<h2>정비 이력</h2>
+<table>
+    <thead><tr><th>정비일</th><th>내용</th><th>당시 주행거리</th></tr></thead>
+    <tbody>
+    <tr th:each="m : ${maintenances}">
+        <td th:text="${m.maintainedAt}">2024-05-21</td>
+        <td th:text="${m.description}">브레이크 패드 교체</td>
+        <td th:text="${#numbers.formatInteger(m.mileage, 0, 'COMMA')} + 'km'">38,000km</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(maintenances)}">
+        <td colspan="3">정비 이력이 없습니다.</td>
+    </tr>
+    </tbody>
+</table>
+
 <p>
     <a th:href="@{/cars/{carId}/edit(carId=${car.id})}">수정</a> |
     <a th:href="@{/cars}">목록</a>
 </p>
 </body>
-</html>
 </html>

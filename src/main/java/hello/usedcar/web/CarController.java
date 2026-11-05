@@ -44,6 +44,8 @@ public class CarController {
     public String detail(@PathVariable Long carId, Model model) {
         Car car = carService.findCar(carId); // 없으면 CarNotFoundException → 404 오류 페이지
         model.addAttribute("car", car);
+        model.addAttribute("maintenances", carService.findMaintenances(carId));
+        model.addAttribute("marketPrice", carService.getMarketPrice(car.getModelName()));
         return "cars/detail";
     }
 

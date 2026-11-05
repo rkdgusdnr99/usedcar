@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.usedcar.repository.mybatis.MaintenanceMapper">
+
+    <select id="findByCarId" resultType="Maintenance">
+        select id, car_id, maintained_at, description, mileage
+        from maintenance_history
+        where car_id = #{carId}
+        order by maintained_at desc
+    </select>
+
+</mapper>
