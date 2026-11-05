@@ -33,10 +33,10 @@ public class CarApiController {
         return carService.findCars(cond);
     }
 
-    // GET /api/cars/1
+    // GET /api/cars/1  (없으면 CarNotFoundException → ApiExceptionAdvice가 404 JSON으로)
     @GetMapping("/{carId}")
-    public ResponseEntity<Car> car(@PathVariable Long carId) {
-        return ResponseEntity.of(carService.findById(carId)); // 있으면 200, 없으면 404
+    public Car car(@PathVariable Long carId) {
+        return carService.findCar(carId);
     }
 
     // POST /api/cars  (JSON 본문)
@@ -49,9 +49,9 @@ public class CarApiController {
 
     // PATCH /api/cars/1  (JSON 본문)
     @PatchMapping("/{carId}")
-    public ResponseEntity<Car> update(@PathVariable Long carId,
-                                      @Valid @RequestBody CarUpdateRequest request) {
-        return ResponseEntity.of(carService.update(carId, request));
+    public Car update(@PathVariable Long carId,
+                      @Valid @RequestBody CarUpdateRequest request) {
+        return carService.update(carId, request);
     }
 }
 

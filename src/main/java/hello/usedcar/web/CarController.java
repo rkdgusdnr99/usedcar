@@ -27,7 +27,7 @@ public class CarController {
 
     private final CarService carService;
 
-    // 이 컨트롤러의 모든 화면에서 ${statuses}로 쓸 수 있다. 기준정보 같은 느낌으로 생각하면 좋을듯..? CMFWMT 같은 느낌??
+    // 이 컨트롤러의 모든 화면에서 ${statuses}로 쓸 수 있다
     @ModelAttribute("statuses")
     public CarStatus[] statuses() {
         return CarStatus.values();
@@ -42,7 +42,7 @@ public class CarController {
 
     @GetMapping("/{carId}")
     public String detail(@PathVariable Long carId, Model model) {
-        Car car = carService.findById(carId).orElseThrow(); // 없는 차량 처리는 5강에서
+        Car car = carService.findCar(carId); // 없으면 CarNotFoundException → 404 오류 페이지
         model.addAttribute("car", car);
         return "cars/detail";
     }
@@ -75,7 +75,7 @@ public class CarController {
 
     @GetMapping("/{carId}/edit")
     public String editForm(@PathVariable Long carId, Model model) {
-        Car car = carService.findById(carId).orElseThrow();
+        Car car = carService.findCar(carId);
         model.addAttribute("carInfo", car);
         model.addAttribute("car", new CarUpdateRequest(car.getMileage(), car.getPrice()));
         return "cars/editForm";
@@ -83,12 +83,12 @@ public class CarController {
 
     @PostMapping("/{carId}/edit")
     public String edit(@PathVariable Long carId,
-                       @Validated @ModelAttribute("car") CarUpdateRequest request, // @Validated를 붙이면 바인딩이 끝난 뒤 애노테이션 규칙을 검사
-                       BindingResult bindingResult, // BindingResult는 검증 대상 바로 뒤에
+                       @Validated @ModelAttribute("car") CarUpdateRequest request,
+                       BindingResult bindingResult,
                        Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("carInfo", carService.findById(carId).orElseThrow());
+            model.addAttribute("carInfo", carService.findCar(carId));
             return "cars/editForm";
         }
 
