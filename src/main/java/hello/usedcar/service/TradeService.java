@@ -21,6 +21,7 @@ public class TradeService {
 
     private final CarRepository carRepository;
     private final TradeMapper tradeMapper;
+    private final TradeLogService tradeLogService;  // 9강: 다른 클래스여야 프록시를 거친다 (8강 내부 호출 함정)
 
     /**
      * 구매: ① 거래 저장 → ② 구매자 확인 → ③ 차량을 판매완료로.
@@ -29,6 +30,7 @@ public class TradeService {
     @Transactional(rollbackFor = BuyerVerificationException.class)
     public Trade buy(Long carId, String buyerName) throws BuyerVerificationException {
         log.info("트랜잭션 활성={}", TransactionSynchronizationManager.isActualTransactionActive());
+        tradeLogService.log(carId, buyerName, "구매 시도");  // 별도 트랜잭션으로 바로 커밋 (9강)
 
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new CarNotFoundException(carId));

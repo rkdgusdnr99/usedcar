@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.usedcar.repository.mybatis.TradeLogMapper">
+
+    <insert id="save">
+        insert into trade_log (car_id, buyer_name, message, created_at)
+        values (#{carId}, #{buyerName}, #{message}, current_timestamp)
+    </insert>
+
+    <select id="countByCarId" resultType="int">
+        select count(*) from trade_log where car_id = #{carId}
+    </select>
+
+</mapper>
