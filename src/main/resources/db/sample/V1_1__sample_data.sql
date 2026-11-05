@@ -1,3 +1,5 @@
+-- 샘플 데이터. local/test 프로필에서만 적용된다 (운영 DB에는 들어가지 않는다)
+
 insert into car (car_number, manufacturer, model_name, model_year, mileage, price, status) values
     ('12가3456', '현대', '쏘나타', 2021, 42000, 2150, 'SALE'),
     ('34나5678', '현대', '쏘나타', 2019, 78000, 1590, 'SALE'),

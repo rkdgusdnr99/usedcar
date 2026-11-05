@@ -1,0 +1,18 @@
+# 로컬 개발용 PostgreSQL. 프로젝트 폴더에서 `docker compose up -d` 로 띄운다
+services:
+  postgres:
+    image: postgres:16
+    container_name: usedcar-postgres
+    environment:
+      POSTGRES_USER: usedcar
+      POSTGRES_PASSWORD: usedcar
+      POSTGRES_DB: usedcar          # 개발용 DB
+      TZ: Asia/Seoul
+    ports:
+      - "5433:5432"
+    volumes:
+      - usedcar-data:/var/lib/postgresql/data          # 컨테이너를 지워도 데이터는 남는다
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql  # 처음 한 번만 실행된다
+
+volumes:
+  usedcar-data:
