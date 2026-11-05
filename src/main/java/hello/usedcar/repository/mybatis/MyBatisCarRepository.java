@@ -45,4 +45,9 @@ public class MyBatisCarRepository implements CarRepository {
     public List<Car> findAll(CarSearchCond cond) {
         return carMapper.findAll(cond);
     }
+
+    @Override
+    public int markSold(Long id) {
+        return carMapper.markSold(id);
+    }
 }

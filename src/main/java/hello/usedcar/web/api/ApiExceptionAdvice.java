@@ -12,6 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import hello.usedcar.exception.AlreadySoldException;
+import hello.usedcar.exception.BuyerVerificationException;
 
 import java.util.List;
 
@@ -64,5 +66,18 @@ public class ApiExceptionAdvice {
         log.error("[API 처리 중 예외]", e);
         return new ErrorResponse("INTERNAL", "서버 오류가 발생했습니다.");
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler
+    public ErrorResponse alreadySold(AlreadySoldException e) {
+        return new ErrorResponse("ALREADY_SOLD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResponse verificationFailed(BuyerVerificationException e) {
+        return new ErrorResponse("VERIFICATION_FAILED", e.getMessage());
+    }
+
 }
 

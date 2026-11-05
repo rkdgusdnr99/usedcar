@@ -16,6 +16,14 @@
         where id = #{id}
     </update>
 
+    <!-- 조건부 UPDATE: 판매중일 때만 바꾼다. 동시에 두 명이 사도 한 명만 1행을 바꾼다 -->
+    <update id="markSold">
+        update car
+        set status = 'SOLD'
+        where id = #{id}
+        and status = 'SALE'
+    </update>
+
     <select id="findById" resultType="Car">
         select id, car_number, manufacturer, model_name, model_year, mileage, price, status
         from car

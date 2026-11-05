@@ -29,4 +29,6 @@ public interface CarMapper {
     List<Car> findAll(CarSearchCond cond);
 
     MarketPrice findMarketPrice(String modelName);
+
+    int markSold(Long id);
 }
